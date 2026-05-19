@@ -21,3 +21,8 @@ twice.
   `6.5.45`.
 - Test rewarded video, interstitial, banner/native if used, close callbacks, load
   failures, impression callbacks, and revenue callbacks before shipping.
+
+## Publishing
+
+See [PUBLISHING.md](PUBLISHING.md) for the full create, validate, SourceTree,
+GitHub token, and CocoaPods Trunk publishing workflow.
