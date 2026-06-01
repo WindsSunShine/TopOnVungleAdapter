@@ -7,11 +7,11 @@ Custom TopOn Vungle adapter packaged for CocoaPods.
 ```ruby
 target 'YourApp' do
   pod 'TPNiOS', '= 6.5.45'
-  pod 'TopOnVungleAdapter', '= 1.0.1'
+  pod 'TopOnVungleAdapter', '= 1.0.2'
 end
 ```
 
-`TopOnVungleAdapter` depends on `TPNiOS` `6.5.45` and `VungleAds` `7.7.2`.
+`TopOnVungleAdapter` depends on `TPNiOS` `6.5.45` and `VungleAds` `7.7.3`.
 Do not also add `AnyThinkiOS` or `TPNMediationVungleAdapter`, otherwise the
 TopOn SDK or Vungle adapter will be linked twice.
 

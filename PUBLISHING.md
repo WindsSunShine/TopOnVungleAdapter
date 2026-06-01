@@ -5,8 +5,8 @@
 - GitHub 仓库：`https://github.com/WindsSunShine/TopOnVungleAdapter.git`
 - Pod 名称：`TopOnVungleAdapter`
 - TopOn SDK：`TPNiOS 6.5.45`
-- Vungle SDK：`VungleAds 7.7.2`
-- 当前发布版本：`1.0.1`
+- Vungle SDK：`VungleAds 7.7.3`
+- 当前发布版本：`1.0.2`
 
 ## 1. 准备文件
 
@@ -19,7 +19,7 @@
 当前项目只打包 TopOn 的 Vungle Adapter，不要把 `VungleAdsSDK.xcframework` 复制进本仓库。Vungle 官方 SDK 通过 CocoaPods 依赖声明：
 
 ```ruby
-s.dependency 'VungleAds', '= 7.7.2'
+s.dependency 'VungleAds', '= 7.7.3'
 ```
 
 这样可以避免 App 同时链接两份 Vungle SDK。
@@ -59,7 +59,7 @@ TopOnVungleAdapter/
 ```ruby
 Pod::Spec.new do |s|
   s.name         = 'TopOnVungleAdapter'
-  s.version      = '1.0.1'
+  s.version      = '1.0.2'
   s.summary      = 'Custom TopOn Vungle adapter for iOS.'
   s.description  = 'Custom TopOn Vungle adapter packaged as a CocoaPods binary dependency.'
 
@@ -77,7 +77,7 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = 'Frameworks/AnyThinkVungleAdapter.xcframework'
 
   s.dependency 'TPNiOS', '= 6.5.45'
-  s.dependency 'VungleAds', '= 7.7.2'
+  s.dependency 'VungleAds', '= 7.7.3'
 
   s.frameworks = [
     'UIKit',
@@ -246,7 +246,7 @@ s.dependency 'VungleAds', '= 7.7.2'
 2. `7.7.1`：和 TopOn 下载包里的 Vungle 二进制哈希一致，是原始随包版本。
 3. `7.7.2`：lint 通过，本次实际发布版本。
 
-### 4.5 为什么当前发布使用 7.7.2，而不是直接使用 7.7.3
+### 4.5 为什么 1.0.2 升级到 7.7.3
 
 截至这次发布时，CocoaPods 上 `VungleAds` 已经有 `7.7.3`：
 
@@ -263,28 +263,27 @@ pod search VungleAds --simple
 7.7.3
 ```
 
-但是这个 adapter 当前公开发布仍然固定为：
+`1.0.1` 公开发布时固定为：
 
 ```ruby
 s.dependency 'VungleAds', '= 7.7.2'
 ```
 
-原因不是 `7.7.3` 一定不能编译，而是发布策略要保守：
+当时没有直接使用 `7.7.3`，原因不是 `7.7.3` 一定不能编译，而是发布策略要保守：
 
 1. TopOn 的 `AnyThinkVungleAdapter.xcframework` 是一个已经编译好的二进制 adapter，它不是源码级 adapter。
 2. 二进制 adapter 是否兼容某个 Vungle 版本，不能只看 CocoaPods 上有没有这个版本。
 3. `pod lib lint` 只能证明依赖解析、编译、链接能通过，不能证明广告运行时行为一定正常。
-4. 这次 `1.0.1` 发布实际完整验证并发布的是 `VungleAds 7.7.2`。
+4. `1.0.1` 实际完整验证并发布的是 `VungleAds 7.7.2`。
 5. `7.7.3` 是 `2026-05-14` 发布的更新版本，和当前 TopOn adapter 下载包不是同一次验证链路。
 
-所以当前结论应该这样写：
+本次 `1.0.2` 明确升级到：
 
-```text
-VungleAds 7.7.3 可以作为候选版本验证，但不应该直接替换到已发布版本里。
-如果要使用 7.7.3，应发布一个新的 pod 版本，例如 1.0.2，并完成 lint + App 运行时广告验证。
+```ruby
+s.dependency 'VungleAds', '= 7.7.3'
 ```
 
-这次实测过 `7.7.3` 的临时 lint，结果是通过的：
+发布前必须重新执行 lint。之前临时验证过 `7.7.3`，本次发布也需要以正式 podspec 再验证一次：
 
 ```text
 TopOnVungleAdapter passed validation.
@@ -347,13 +346,13 @@ lint 通过后，还要在真实 App 或测试 Demo 中验证广告运行时行�
 
 只有这些验证通过后，才建议把 `7.7.3` 写进正式 podspec 并发布新版本。
 
-### 4.8 如果决定发布 7.7.3
+### 4.8 如果后续继续升级 Vungle
 
-不要覆盖已经发布的 `1.0.1`。CocoaPods 已发布版本不可修改，应发新版本：
+不要覆盖已经发布的版本。CocoaPods 已发布版本不可修改，应发新版本：
 
 ```ruby
-s.version = '1.0.2'
-s.dependency 'VungleAds', '= 7.7.3'
+s.version = '1.0.3'
+s.dependency 'VungleAds', '= 新版本'
 ```
 
 然后执行完整发布流程：
@@ -362,11 +361,11 @@ s.dependency 'VungleAds', '= 7.7.3'
 pod lib lint TopOnVungleAdapter.podspec --allow-warnings --verbose
 
 git add TopOnVungleAdapter.podspec README.md PUBLISHING.md Frameworks/AnyThinkVungleAdapter.xcframework
-git commit -m "Release TopOn Vungle adapter 1.0.2"
+git commit -m "Release TopOn Vungle adapter 1.0.3"
 
 git push origin main
-git tag 1.0.2
-git push origin 1.0.2
+git tag 1.0.3
+git push origin 1.0.3
 
 pod trunk push TopOnVungleAdapter.podspec --allow-warnings --verbose
 pod trunk info TopOnVungleAdapter
@@ -485,7 +484,7 @@ pod lib lint TopOnVungleAdapter.podspec --allow-warnings --verbose
 ```bash
 git status
 git add README.md PUBLISHING.md LICENSE TopOnVungleAdapter.podspec Frameworks/AnyThinkVungleAdapter.xcframework
-git commit -m "Release TopOn Vungle adapter 1.0.1"
+git commit -m "Release TopOn Vungle adapter 1.0.2"
 ```
 
 推送 main：
@@ -497,15 +496,15 @@ git push origin main
 创建并推送 tag。tag 必须和 podspec 里的 `s.version` 完全一致：
 
 ```bash
-git tag 1.0.1
-git push origin 1.0.1
-```
-
-如果以后发布 `1.0.2`：
-
-```bash
 git tag 1.0.2
 git push origin 1.0.2
+```
+
+如果以后发布 `1.0.3`：
+
+```bash
+git tag 1.0.3
+git push origin 1.0.3
 ```
 
 ## 8. 注册 CocoaPods Trunk
@@ -543,8 +542,8 @@ pod trunk push TopOnVungleAdapter.podspec --allow-warnings --verbose
 成功时会看到类似：
 
 ```text
-Push for TopOnVungleAdapter 1.0.1 initiated.
-Push for TopOnVungleAdapter 1.0.1 has been pushed.
+Push for TopOnVungleAdapter 1.0.2 initiated.
+Push for TopOnVungleAdapter 1.0.2 has been pushed.
 ```
 
 发布后确认：
@@ -578,7 +577,7 @@ App 的 `Podfile`：
 source 'https://cdn.cocoapods.org/'
 
 target 'YourApp' do
-  pod 'TopOnVungleAdapter', '= 1.0.1'
+  pod 'TopOnVungleAdapter', '= 1.0.2'
 end
 ```
 
@@ -592,7 +591,7 @@ pod install --repo-update
 
 ```ruby
 pod 'TPNiOS', '= 6.5.45'
-pod 'TopOnVungleAdapter', '= 1.0.1'
+pod 'TopOnVungleAdapter', '= 1.0.2'
 ```
 
 不要再同时添加：
