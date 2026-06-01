@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'TopOnVungleAdapter'
-  s.version      = '1.0.2'
+  s.version      = '1.0.3'
   s.summary      = 'Custom TopOn Vungle adapter for iOS.'
   s.description  = <<-DESC
   Custom TopOn Vungle adapter packaged as a CocoaPods binary dependency.
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
 
   # TopOn 主 SDK，版本要和下载这个 Adapter 时选择的 TopOn SDK 版本一致
   # 项目使用 TPNiOS 体系时不能再依赖 AnyThinkiOS，否则会重复引入 AnyThinkSDK.xcframework
-  s.dependency 'TPNiOS', '= 6.5.45'
+  s.dependency 'TPNiOS'
 
   # Vungle 官方 SDK，不要把 VungleAdsSDK.xcframework 重复打包进来
   # 版本号需要和 TopOn 下载包内置的 VungleAdsSDK.xcframework 保持一致

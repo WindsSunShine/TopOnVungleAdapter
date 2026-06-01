@@ -4,16 +4,16 @@
 
 - GitHub 仓库：`https://github.com/WindsSunShine/TopOnVungleAdapter.git`
 - Pod 名称：`TopOnVungleAdapter`
-- TopOn SDK：`TPNiOS 6.5.45`
+- TopOn SDK：`TPNiOS`，具体版本由外层 App 或上层库控制
 - Vungle SDK：`VungleAds 7.7.3`
-- 当前发布版本：`1.0.2`
+- 当前发布版本：`1.0.3`
 
 ## 1. 准备文件
 
 从 TopOn 下载对应平台的 iOS SDK 包，确认里面包含：
 
 - `AnyThinkVungleAdapter.xcframework`
-- TopOn 主 SDK 版本号，例如 `6.5.45`
+- TopOn 主 SDK 版本号，例如 `6.5.47`
 - Vungle 官方 SDK 版本号，例如 `7.7.2`
 
 当前项目只打包 TopOn 的 Vungle Adapter，不要把 `VungleAdsSDK.xcframework` 复制进本仓库。Vungle 官方 SDK 通过 CocoaPods 依赖声明：
@@ -59,7 +59,7 @@ TopOnVungleAdapter/
 ```ruby
 Pod::Spec.new do |s|
   s.name         = 'TopOnVungleAdapter'
-  s.version      = '1.0.2'
+  s.version      = '1.0.3'
   s.summary      = 'Custom TopOn Vungle adapter for iOS.'
   s.description  = 'Custom TopOn Vungle adapter packaged as a CocoaPods binary dependency.'
 
@@ -76,7 +76,7 @@ Pod::Spec.new do |s|
   s.static_framework = true
   s.vendored_frameworks = 'Frameworks/AnyThinkVungleAdapter.xcframework'
 
-  s.dependency 'TPNiOS', '= 6.5.45'
+  s.dependency 'TPNiOS'
   s.dependency 'VungleAds', '= 7.7.3'
 
   s.frameworks = [
@@ -97,7 +97,7 @@ end
 升级版本时通常只改这几项：
 
 - `s.version`
-- `s.dependency 'TPNiOS', '= x.x.x'`
+- `s.dependency 'TPNiOS'`
 - `s.dependency 'VungleAds', '= x.x.x'`
 - `Frameworks/AnyThinkVungleAdapter.xcframework`
 
@@ -351,7 +351,7 @@ lint 通过后，还要在真实 App 或测试 Demo 中验证广告运行时行�
 不要覆盖已经发布的版本。CocoaPods 已发布版本不可修改，应发新版本：
 
 ```ruby
-s.version = '1.0.3'
+s.version = '1.0.4'
 s.dependency 'VungleAds', '= 新版本'
 ```
 
@@ -361,11 +361,11 @@ s.dependency 'VungleAds', '= 新版本'
 pod lib lint TopOnVungleAdapter.podspec --allow-warnings --verbose
 
 git add TopOnVungleAdapter.podspec README.md PUBLISHING.md Frameworks/AnyThinkVungleAdapter.xcframework
-git commit -m "Release TopOn Vungle adapter 1.0.3"
+git commit -m "Release TopOn Vungle adapter 1.0.4"
 
 git push origin main
-git tag 1.0.3
-git push origin 1.0.3
+git tag 1.0.4
+git push origin 1.0.4
 
 pod trunk push TopOnVungleAdapter.podspec --allow-warnings --verbose
 pod trunk info TopOnVungleAdapter
@@ -483,8 +483,8 @@ pod lib lint TopOnVungleAdapter.podspec --allow-warnings --verbose
 
 ```bash
 git status
-git add README.md PUBLISHING.md LICENSE TopOnVungleAdapter.podspec Frameworks/AnyThinkVungleAdapter.xcframework
-git commit -m "Release TopOn Vungle adapter 1.0.2"
+git add README.md PUBLISHING.md CHANGELOG.md LICENSE TopOnVungleAdapter.podspec Frameworks/AnyThinkVungleAdapter.xcframework
+git commit -m "Release TopOn Vungle adapter 1.0.3"
 ```
 
 推送 main：
@@ -496,15 +496,15 @@ git push origin main
 创建并推送 tag。tag 必须和 podspec 里的 `s.version` 完全一致：
 
 ```bash
-git tag 1.0.2
-git push origin 1.0.2
-```
-
-如果以后发布 `1.0.3`：
-
-```bash
 git tag 1.0.3
 git push origin 1.0.3
+```
+
+如果以后发布 `1.0.4`：
+
+```bash
+git tag 1.0.4
+git push origin 1.0.4
 ```
 
 ## 8. 注册 CocoaPods Trunk
@@ -542,8 +542,8 @@ pod trunk push TopOnVungleAdapter.podspec --allow-warnings --verbose
 成功时会看到类似：
 
 ```text
-Push for TopOnVungleAdapter 1.0.2 initiated.
-Push for TopOnVungleAdapter 1.0.2 has been pushed.
+Push for TopOnVungleAdapter 1.0.3 initiated.
+Push for TopOnVungleAdapter 1.0.3 has been pushed.
 ```
 
 发布后确认：
@@ -577,7 +577,7 @@ App 的 `Podfile`：
 source 'https://cdn.cocoapods.org/'
 
 target 'YourApp' do
-  pod 'TopOnVungleAdapter', '= 1.0.2'
+  pod 'TopOnVungleAdapter', '= 1.0.3'
 end
 ```
 
@@ -587,11 +587,11 @@ end
 pod install --repo-update
 ```
 
-如果 App 里已经显式声明 `TPNiOS`，版本要和 adapter 的 podspec 保持一致：
+如果 App 里已经显式声明 `TPNiOS`，最终版本由 App 的 `Podfile` 或上层库决定：
 
 ```ruby
-pod 'TPNiOS', '= 6.5.45'
-pod 'TopOnVungleAdapter', '= 1.0.2'
+pod 'TPNiOS', '= 6.5.47'
+pod 'TopOnVungleAdapter', '= 1.0.3'
 ```
 
 不要再同时添加：
