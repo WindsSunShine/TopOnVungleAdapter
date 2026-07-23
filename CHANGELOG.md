@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4
+
+- Upgrade VungleAds dependency to 7.7.5.
+
 ## 1.0.3
 
 - 升级TPN的库。
